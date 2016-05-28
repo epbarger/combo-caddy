@@ -1,5 +1,5 @@
-var singleBell = new Audio('sounds/single_bell.mp3'); var playSingleBell = function(){singleBell.play();}
-var tripleBell = new Audio('sounds/triple_bell.mp3'); var playTripleBell = function(){tripleBell.play();}
+var singleBell = new Audio('sounds/single_bell.mp3'); var playSingleBell = function(){singleBell.volume = 0.5; singleBell.play();}
+var tripleBell = new Audio('sounds/triple_bell.mp3'); var playTripleBell = function(){tripleBell.volume = 0.5; tripleBell.play();}
 var comboAudioPointer = new Audio('sounds/loris/jab.mp3');
 
 var selectedCoach = "loris";
@@ -66,12 +66,24 @@ var selectRoundLength = function(e){
   roundLength = parseInt(e.explicitOriginalTarget.value)
 }
 
+var clickDing = function(e){
+  var btn = e.explicitOriginalTarget
+  if (btn.value == 'start') {
+    newRound(roundLength)
+    btn.value = 'stop'
+    btn.textContent = 'End Round Early'
+    btn.className = 'btn btn-danger'
+  } else {
+    cancelRound()
+    btn.value = 'start'
+    btn.textContent = 'Start Round'
+    btn.className = 'btn btn-success'
+  }
+}
+
 window.onload = function(){
   var dingBtn = document.getElementById('ding')
-  dingBtn.addEventListener("click", function(){ newRound(roundLength) }); 
-
-  var cancelBtn = document.getElementById('cancel')
-  cancelBtn.addEventListener("click", cancelRound);
+  dingBtn.addEventListener("click", clickDing); 
 
   var coachBtn = document.getElementById('coach')
   coachBtn.addEventListener("change", selectCoach);
