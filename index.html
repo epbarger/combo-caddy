@@ -9,8 +9,19 @@
   <body>
     <main style='margin: 0 auto; width: 90%'>
       <h1>Combo Caddy</h1>
-      <button type="button" id='ding' style="width:100%; height: 100px; margin: 10px 0;">Start Round (3 Min)</button>
-      <button type="button" id='cancel' style="width:100%; height: 100px; margin: 10px 0;">End Round Early</button> 
+      <button type="button" id='ding' style="width:100%; height: 100px; margin: 10px 0;">Start Round</button>
+      <button type="button" id='cancel' style="width:100%; height: 60px; margin: 10px 0;">End Round Early</button> 
+      <h2>Options</h2>
+      <select id='coach' style="width:100%; height:60px; padding-left:15px; margin-left:2px">
+        <option value='loris' selected="selected">Coach - Loris</option>
+      </select>
+      <select id='length' style="width:100%; height:60px; padding-left:15px; margin-left:2px">
+        <option value='300'>Round - 5 Min</option>
+        <option value='240'>Round - 4 Min</option>
+        <option value='180' selected="selected">Round - 3 Min</option>
+        <option value='120'>Round - 2 Min</option>
+        <option value='60'>Round - 1 Min</option>
+      </select>
     </main>
   </body>
 </html> 

@@ -1,10 +1,11 @@
 var singleBell = new Audio('sounds/single_bell.mp3'); var playSingleBell = function(){singleBell.play();}
 var tripleBell = new Audio('sounds/triple_bell.mp3'); var playTripleBell = function(){tripleBell.play();}
+var comboAudioPointer = new Audio('sounds/loris/jab.mp3');
 
-var selectedVoice = "loris";
+var selectedCoach = "loris";
 var roundLength = 180;
-var numberOfRounds = 3;
-var breakLength = 60;
+// var numberOfRounds = 3;
+// var breakLength = 60;
 
 var roundInterrupt = false;
 
@@ -28,13 +29,14 @@ var playNextCombo = function(endTime) {
 
   var combo = combos[Math.floor(Math.random() * combos.length)];
   console.log(combo[0])
-  var audio = new Audio('sounds/' + selectedVoice + '/' + combo[1])
-  audio.play()
+  // need to reuse audio object to keep iOS user-interaction play permission
+  comboAudioPointer.src = 'sounds/' + selectedCoach + '/' + combo[1]
+  comboAudioPointer.play()
   var delayLength = combo[2]
   if (Date.now() > endTime) {
     setTimeout(endRound, delayLength)
   } else {
-    setTimeout(playNextCombo.bind(null, endTime), delayLength)
+    setTimeout(function(){ playNextCombo(endTime) } , delayLength)
   }
 }
 
@@ -47,7 +49,7 @@ var newRound = function(length){
   playSingleBell()
   console.log('round start')
   var endTime = Date.now() + (1000 * length)
-  setTimeout(playNextCombo.bind(null, endTime), 1000)
+  setTimeout(function(){ playNextCombo(endTime) }, 1000)
 }
 
 var cancelRound = function(){
@@ -56,10 +58,27 @@ var cancelRound = function(){
   console.log('round cancelled')
 }
 
+var selectCoach = function(e){
+  selectedCoach = e.explicitOriginalTarget.value
+}
+
+var selectRoundLength = function(e){
+  roundLength = parseInt(e.explicitOriginalTarget.value)
+}
+
 window.onload = function(){
   var dingBtn = document.getElementById('ding')
-  dingBtn.addEventListener("click", newRound.bind(null, roundLength)); 
+  dingBtn.addEventListener("click", function(){ newRound(roundLength) }); 
 
   var cancelBtn = document.getElementById('cancel')
   cancelBtn.addEventListener("click", cancelRound);
+
+  var coachBtn = document.getElementById('coach')
+  coachBtn.addEventListener("change", selectCoach);
+
+  var lengthBtn = document.getElementById('length')
+  lengthBtn.addEventListener("change", selectRoundLength);
+
+  selectCoach({ 'explicitOriginalTarget': document.getElementById('coach') })
+  selectRoundLength({ 'explicitOriginalTarget': document.getElementById('length') })
 }
