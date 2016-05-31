@@ -7,6 +7,7 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
     <script src="script.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles.css">
   </head>
 
   <body style='background-color:#3991ff;'>
@@ -17,22 +18,40 @@
       <hr style='margin-top: 5px; margin-bottom: 12px;'>
       <div class='row'>
         <div class='col-xs-12'>
-          <button class='btn btn-success' type="button" id='ding' value='start' style="width:100%; height: 100px; margin: 10px 0;">Start Round</button>
-          <!-- <button class='btn btn-default' type="button" id='cancel' style="width:100%; height: 60px; margin: 10px 0;">End Round Early</button> -->
+          <button class='btn btn-success' type="button" id='set' style="width:100%; height: 90px; margin: 5px 0;">Start Set</button>
+          <button class='btn btn-success' type="button" id='ding' style="width:100%; height: 50px; margin: 5px 0;">Start Single Round</button>
+          <button class='btn btn-danger hide' type="button" id='cancel' style="width:100%; height: 160px;">End Training</button>
         </div>
       </div>
       <div class='row'>
         <div class='col-xs-12'>
-          <h2>Options</h2>
-          <select class='form-control' id='length' style="width:100%; height:30px; padding-left:15px; margin-left:2px; margin-bottom: 10px">
-            <option value='300'>Round - 5 Min</option>
-            <option value='240'>Round - 4 Min</option>
-            <option value='180' selected="selected">Round - 3 Min</option>
-            <option value='120'>Round - 2 Min</option>
-            <option value='60'>Round - 1 Min</option>
+          <h3>Options</h3>
+          <select class='form-control' id='coach' style="width:100%; height:30px; padding-left:15px; margin-left:2px; margin-bottom: 5px">
+            <option value='loris' selected="selected">Voice: Loris</option>
           </select>
-          <select class='form-control' id='coach' style="width:100%; height:30px; padding-left:15px; margin-left:2px;">
-            <option value='loris' selected="selected">Coach - Loris</option>
+          <select class='form-control' id='length' style="width:100%; height:30px; padding-left:15px; margin-left:2px; margin-bottom: 5px">
+            <option value='300'>Round: 5 Min</option>
+            <option value='240'>Round: 4 Min</option>
+            <option value='180' selected="selected">Round: 3 Min</option>
+            <option value='120'>Round: 2 Min</option>
+            <option value='60'>Round: 1 Min</option>
+          </select>
+          <select class='form-control' id='break-length' style="width:100%; height:30px; padding-left:15px; margin-left:2px; margin-bottom: 5px">
+            <option value='180'>Break: 3 Min</option>
+            <option value='120'>Break: 2 Min</option>
+            <option value='60' selected="selected">Break: 1 Min</option>
+            <option value='30'>Break: 30 Sec</option>
+          </select>
+          <select class='form-control' id='round-count' style="width:100%; height:30px; padding-left:15px; margin-left:2px; ">
+            <option value='10'># Rounds: 10</option>
+            <option value='9'># Rounds: 9</option>
+            <option value='8'># Rounds: 8</option>
+            <option value='7'># Rounds: 7</option>
+            <option value='6'># Rounds: 6</option>
+            <option value='5'># Rounds: 5</option>
+            <option value='4'># Rounds: 4</option>
+            <option value='3' selected="selected"># Rounds: 3</option>
+            <option value='2'># Rounds: 2</option>
           </select>
         </div>
       </div>

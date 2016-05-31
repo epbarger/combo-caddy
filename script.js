@@ -1,13 +1,13 @@
-var singleBell = new Audio('sounds/single_bell.mp3'); var playSingleBell = function(){singleBell.play();}
-var tripleBell = new Audio('sounds/triple_bell.mp3'); var playTripleBell = function(){tripleBell.play();}
+var singleBell = new Audio('sounds/single_bell.mp3'); 
+var tripleBell = new Audio('sounds/triple_bell.mp3');
 var comboAudioPointer = new Audio('sounds/loris/jab.mp3');
 
 var selectedCoach = "loris";
-var roundLength = 180;
-// var numberOfRounds = 3;
-// var breakLength = 60;
+var roundLength = 20;
+var numberOfRounds = 3;
+var breakLength = 10;
 
-var roundInterrupt = false;
+var currentActionId = 1;
 
 var combos = [
   ["one", "one.mp3", 1500],
@@ -21,41 +21,36 @@ var combos = [
   ["jab cross", "jab_cross.mp3", 2000]
 ]
 
-var playNextCombo = function(endTime) {
-  if (roundInterrupt === true){
-    roundInterrupt = false
-    return null
-  }
+window.onload = function(){
+  // start/stop buttons
+  var dingBtn = document.getElementById('ding')
+  dingBtn.addEventListener("click", function(){ start(0) }); 
 
-  var combo = combos[Math.floor(Math.random() * combos.length)];
-  console.log(combo[0])
-  // need to reuse audio object to keep iOS user-interaction play permission
-  comboAudioPointer.src = 'sounds/' + selectedCoach + '/' + combo[1]
-  comboAudioPointer.play()
-  var delayLength = combo[2]
-  if (Date.now() > endTime) {
-    setTimeout(endRound, delayLength)
-  } else {
-    setTimeout(function(){ playNextCombo(endTime) } , delayLength)
-  }
-}
+  var setBtn = document.getElementById('set')
+  setBtn.addEventListener("click", function(){start(numberOfRounds - 1)});
 
-var endRound = function(){
-  playTripleBell()
-  console.log('round over')
-}
+  var cancelBtn = document.getElementById('cancel')
+  cancelBtn.addEventListener("click", stop);
 
-var newRound = function(length){
-  playSingleBell()
-  console.log('round start')
-  var endTime = Date.now() + (1000 * length)
-  setTimeout(function(){ playNextCombo(endTime) }, 1000)
-}
 
-var cancelRound = function(){
-  roundInterrupt = true
-  playTripleBell()
-  console.log('round cancelled')
+  //  settings selects
+
+  var coachBtn = document.getElementById('coach')
+  coachBtn.addEventListener("change", selectCoach);
+
+  var lengthBtn = document.getElementById('length')
+  lengthBtn.addEventListener("change", selectRoundLength);
+
+  var breakLengthBtn = document.getElementById('break-length');
+  breakLengthBtn.addEventListener("change", selectBreakLength);
+
+  var roundCountBtn = document.getElementById('round-count');
+  roundCountBtn.addEventListener("change", selectRoundCount);
+
+  selectCoach({ 'explicitOriginalTarget': coachBtn })
+  selectRoundLength({ 'explicitOriginalTarget': lengthBtn })
+  selectBreakLength({ 'explicitOriginalTarget': breakLengthBtn })
+  selectRoundCount({ 'explicitOriginalTarget': roundCountBtn })
 }
 
 var selectCoach = function(e){
@@ -66,31 +61,76 @@ var selectRoundLength = function(e){
   roundLength = parseInt(e.explicitOriginalTarget.value)
 }
 
-var clickDing = function(){
-  var btn = document.getElementById('ding')
-  if (btn.value == 'start') {
-    newRound(roundLength)
-    btn.value = 'stop'
-    btn.textContent = 'End Round Early'
-    btn.className = 'btn btn-danger'
+var selectBreakLength = function(e){
+  breakLength = parseInt(e.explicitOriginalTarget.value)
+}
+
+var selectRoundCount = function(e){
+  numberOfRounds = parseInt(e.explicitOriginalTarget.value)
+}
+
+var start = function(breaksLeft){
+  console.log('start')
+  playSingleBell()
+  hideStartButtonsShowStopButton()
+  var startActionId = currentActionId
+  setTimeout(function(){ playRound(startActionId, Date.now() + roundLength * 1000, breaksLeft) }, 1000)
+}
+
+var stop = function(){
+  console.log('stop')
+  currentActionId++
+  playTripleBell(currentActionId)
+  showStartButtonsHideStopButton()
+}
+
+var playRound = function(actionId, roundEndTime, breaksLeft){
+  if (currentActionId != actionId) { return null; }
+  var combo = combos[Math.floor(Math.random() * combos.length)];
+  console.log(combo[0])
+  comboAudioPointer.src = 'sounds/' + selectedCoach + '/' + combo[1]
+  comboAudioPointer.play()
+  var delayLength = combo[2]
+  if (Date.now() > roundEndTime) {
+    if (breaksLeft > 0) {
+      console.log('scheduled next round')
+      setTimeout(function(){ playTripleBell(actionId) }, delayLength) // play the end round bell after phrase delay
+      setTimeout(function(){ // schedule next round
+        playSingleBell(actionId)
+        setTimeout(function(){ 
+          playRound(actionId, Date.now() + breakLength * 1000 + roundLength * 1000, breaksLeft - 1)
+        }, 1000) 
+      }, breakLength * 1000)
+    } else {
+      setTimeout(end, delayLength)
+    }
   } else {
-    cancelRound()
-    btn.value = 'start'
-    btn.textContent = 'Start Round'
-    btn.className = 'btn btn-success'
+    setTimeout(function(){ playRound(actionId, roundEndTime, breaksLeft) }, delayLength)
   }
 }
 
-window.onload = function(){
-  var dingBtn = document.getElementById('ding')
-  dingBtn.addEventListener("click", clickDing); 
+var end = function(){
+  console.log('end')
+  showStartButtonsHideStopButton()
+  playTripleBell()
+}
 
-  var coachBtn = document.getElementById('coach')
-  coachBtn.addEventListener("change", selectCoach);
+var playSingleBell = function(actionId){
+  if (currentActionId == actionId) { singleBell.play() }
+}
 
-  var lengthBtn = document.getElementById('length')
-  lengthBtn.addEventListener("change", selectRoundLength);
+var playTripleBell = function(actionId){
+  if (currentActionId == actionId) { tripleBell.play() }
+}
 
-  selectCoach({ 'explicitOriginalTarget': document.getElementById('coach') })
-  selectRoundLength({ 'explicitOriginalTarget': document.getElementById('length') })
+var hideStartButtonsShowStopButton = function() {
+  document.getElementById('ding').className = 'btn btn-success hide'
+  document.getElementById('set').className = 'btn btn-success hide'
+  document.getElementById('cancel').className = 'btn btn-danger'
+}
+
+var showStartButtonsHideStopButton = function(){
+  document.getElementById('ding').className = 'btn btn-success'
+  document.getElementById('set').className = 'btn btn-success'
+  document.getElementById('cancel').className = 'btn btn-danger hide'
 }
