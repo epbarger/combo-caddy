@@ -1,8 +1,8 @@
 var singleBell = new Audio('sounds/single_bell.mp3'); 
 var tripleBell = new Audio('sounds/triple_bell.mp3');
-var comboAudioPointer = new Audio('sounds/loris/jab.mp3');
+var comboAudioPointer = new Audio('sounds/silence.mp3');
 
-var selectedCoach = "loris";
+var selectedCoach = "evan";
 var roundLength = 20;
 var numberOfRounds = 3;
 var breakLength = 10;
@@ -71,15 +71,18 @@ var selectRoundCount = function(e){
 
 var start = function(breaksLeft){
   console.log('start')
-  playSingleBell()
   hideStartButtonsShowStopButton()
   var startActionId = currentActionId
+  playSingleBell(startActionId)
+  comboAudioPointer.src = 'sounds/silence.mp3'
+  comboAudioPointer.play() // activate audio pointer for iOS
   setTimeout(function(){ playRound(startActionId, Date.now() + roundLength * 1000, breaksLeft) }, 1000)
 }
 
 var stop = function(){
   console.log('stop')
   currentActionId++
+  comboAudioPointer.pause()
   playTripleBell(currentActionId)
   showStartButtonsHideStopButton()
 }
@@ -88,6 +91,7 @@ var playRound = function(actionId, roundEndTime, breaksLeft){
   if (currentActionId != actionId) { return null; }
   var combo = combos[Math.floor(Math.random() * combos.length)];
   console.log(combo[0])
+  comboAudioPointer.pause() // probably not needed but why not
   comboAudioPointer.src = 'sounds/' + selectedCoach + '/' + combo[1]
   comboAudioPointer.play()
   var delayLength = combo[2]
@@ -112,7 +116,7 @@ var playRound = function(actionId, roundEndTime, breaksLeft){
 var end = function(){
   console.log('end')
   showStartButtonsHideStopButton()
-  playTripleBell()
+  playTripleBell(currentActionId)
 }
 
 var playSingleBell = function(actionId){
@@ -123,6 +127,7 @@ var playTripleBell = function(actionId){
   if (currentActionId == actionId) { tripleBell.play() }
 }
 
+// these classes should probably be infered somehow to avoid duplicating the html like this... maybe use classList + a polyfill?
 var hideStartButtonsShowStopButton = function() {
   document.getElementById('ding').className = 'btn btn-success hide'
   document.getElementById('set').className = 'btn btn-success hide'

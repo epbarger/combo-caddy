@@ -1,3 +1,75 @@
+body {
+  background-color:#3991ff;
+}
+
+hr {
+  margin: 5px 0 12px 0;
+}
+
+h1, h2 {
+  -webkit-text-stroke: 1px black;
+  font-weight: bold;
+}
+
+h1 {
+  letter-spacing: -0.4px
+}
+
+button {
+  width: 100%;
+}
+
+button#set, button#ding {
+  margin: 5px 0;
+}
+
+button#set {
+  height: 90px;
+}
+
+button#ding {
+  height: 50px;
+}
+
+button#cancel {
+  height: 160px;
+}
+
+img#glove{
+  margin: 0 0 12px 10px;
+  height: 30px;
+}
+
+select.form-control {
+  height:30px; 
+  padding-left: 15px; 
+  margin: 0 0 5px 2px;
+  border-color: black;
+}
+
+select.form-control:focus{
+  border-color: black;
+}
+
+button.btn {
+  font-size: 16px;
+}
+
+.btn-success {
+  background-color: #9cd54b;
+  border-color: black;
+}
+
+.btn-success:hover {
+  background-color: #b0e06d;
+  border-color: black;
+}
+
+.container {
+  max-width: 700px;
+  color: white; 
+}
+
 .hide {
   display: none;
 }
