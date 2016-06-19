@@ -1,5 +1,6 @@
 body {
-  background-color:#3991ff;
+  background-color: rgb(44, 44, 44);
+  color: #E4E4E4;
 }
 
 hr {
@@ -7,7 +8,7 @@ hr {
 }
 
 h1, h2 {
-  -webkit-text-stroke: 1px black;
+  // -webkit-text-stroke: 1px black;
   font-weight: bold;
 }
 

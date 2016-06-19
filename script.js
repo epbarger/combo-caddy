@@ -9,6 +9,7 @@ var breakLength = 10;
 
 var currentActionId = 1;
 
+// should switch from multiple files to audio sprites at some point to fix ios issues
 var combos = [
   ["one", "one.mp3", 1500],
   ["jab", "jab.mp3", 1500],
